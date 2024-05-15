@@ -1,0 +1,74 @@
+.container-fluid {
+  .card {
+    // .card-body {
+    //   padding: 2rem;
+    // }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      font-size: 1rem;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .submitButton {
+      display: flex;
+      justify-content: space-between;
+
+      .btn {
+        width: 45%;
+      }
+    }
+  }
+}
+.card {
+  width: 100% !important;
+   max-width: 100% !important; 
+}
+.heading {
+  font-size: 2rem;
+  color: #2980b9;
+  margin-bottom: 2rem;
+}
+.centerDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.card {
+  width: 100%;
+  max-width: 500px; /* Adjust the max-width as needed */
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.heading {
+  margin-bottom: 20px;
+}
+
+.formDiv {
+  height: 100%;
+}
+
+@media (max-width: 576px) {
+  .centerDiv {
+    padding: 0px 0px;
+  }
+  .container-fluid.p-5 {
+    padding: 0 !important;
+  }
+  .submitButton {
+    display: flex;
+    justify-content: space-between;
+
+    .btn {
+      width: 45%;
+    }
+  }
+}
