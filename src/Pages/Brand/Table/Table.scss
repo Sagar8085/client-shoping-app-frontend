@@ -73,7 +73,7 @@
 }
 
 .editIcon {
-  color: rgb(36, 94, 180);
+  color: #fff;
   transition: color 0.3s; /* Smooth transition effect */
 }
 
@@ -103,4 +103,67 @@
       }
     }
   }
+}
+
+// ----------
+.table-container {
+  overflow-x: auto;
+}
+
+.centered-table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 8px;
+}
+
+.table th {
+  background-color: #f2f2f2; // Light grey background for headers
+  color: #333; // Darker text for better contrast
+}
+
+.table tr:nth-child(even) {
+  background-color: #f9f9f9; // Even rows have a light background
+}
+
+.table tr:hover {
+  background-color: #e6e6e6; // Hover effect on rows
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn {
+  margin-right: 5px;
+}
+
+// Additional styling for action buttons
+.editIcon,
+.deleteIcon {
+  cursor: pointer;
+  color: white;
+}
+
+.editIcon {
+  background-color: #007bff;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.deleteIcon {
+  background-color: #dc3545;
+  border-radius: 50%;
+  padding: 5px;
 }

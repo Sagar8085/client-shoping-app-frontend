@@ -111,12 +111,11 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
                   <img src={row?.file?.fileUrl} alt="brand image" />
                 </td>
                 <td>
-                  <button className="btn ">
-                    <FontAwesomeIcon
-                      className="editIcon"
-                      onClick={() => handleOpenModel(row)}
-                      icon={faPen}
-                    />
+                  <button
+                    className="btn btn-success"
+                    onClick={() => handleOpenModel(row)}
+                  >
+                    <FontAwesomeIcon className="editIcon" icon={faPen} />
                   </button>{" "}
                   <button className="btn" onClick={() => deleteBrand(row._id)}>
                     <FontAwesomeIcon className="deleteIcon" icon={faTrashAlt} />
