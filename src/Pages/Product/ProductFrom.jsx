@@ -13,6 +13,7 @@ export default function ProductFrom({
   onHide,
   setIsSubmitData,
   allCategoryData,
+  selectedBrand,
 }) {
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState({
@@ -21,8 +22,8 @@ export default function ProductFrom({
   });
 
   const initialValues = {
-    category_id: data.category_id || "",
-    brandId: "", // Added brandId field
+    category_id: data.categoryId || "",
+    brandId: selectedBrand?._id || "", // Set selectedBrand as the initial value for brandId
     productName: data.productName || "",
   };
 
@@ -58,7 +59,7 @@ export default function ProductFrom({
         selectedImage.fileUrl.length > 0
       ) {
         if (data._id) {
-          updateBrand(data._id, productData);
+          updateProduct(data._id, productData);
         } else {
           addProduct(productData);
         }
@@ -109,10 +110,11 @@ export default function ProductFrom({
     }
   };
 
+  /**  Get brands when choose category in form*/
   const getAllBrand = async (categoryId) => {
     try {
       const response = await axios.get(
-        `https://shopping-backend-3.onrender.com/brand/getAllBrand?category_id=${categoryId}`
+        `https://shopping-backend-3.onrender.com/brand/getAllBrand`
       );
 
       if (response?.data?.status) {
@@ -127,6 +129,8 @@ export default function ProductFrom({
     }
   };
 
+  /**  Add new Products
+   */
   const addProduct = async (data) => {
     try {
       const response = await axios.post(
@@ -144,10 +148,11 @@ export default function ProductFrom({
     }
   };
 
-  const updateBrand = async (brandId, data) => {
+  /**  update products*/
+  const updateProduct = async (productId, data) => {
     try {
       const response = await axios.put(
-        `https://shopping-backend-3.onrender.com/brand/updateBrand/${brandId}`,
+        `https://shopping-backend-3.onrender.com/product/updateProduct/${productId}`,
         data
       );
       if (response?.status) {

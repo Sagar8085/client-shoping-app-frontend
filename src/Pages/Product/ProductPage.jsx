@@ -38,6 +38,7 @@ export default function ProductPage() {
         data={allProductData}
         pageSize={pageSize}
         setIsSubmitData={setIsSubmitData}
+        
       />
     </div>
   );

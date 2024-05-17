@@ -10,7 +10,7 @@ import "./Table.scss";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import BrandForm from "../ProductFrom";
+import ProductFrom from "../ProductFrom";
 
 const ProductTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -130,12 +130,11 @@ const ProductTable = ({ columns, data, pageSize, setIsSubmitData }) => {
                   <img src={row?.file?.fileUrl} alt="brand image" />
                 </td>
                 <td>
-                  <button className="btn editButton ">
-                    <FontAwesomeIcon
-                      className="editIcon"
-                      onClick={() => handleOpenModel(row)}
-                      icon={faPen}
-                    />
+                  <button
+                    className="btn editButton "
+                    onClick={() => handleOpenModel(row)}
+                  >
+                    <FontAwesomeIcon className="editIcon" icon={faPen} />
                   </button>{" "}
                   <button
                     className="btn deleteButton"
@@ -179,10 +178,12 @@ const ProductTable = ({ columns, data, pageSize, setIsSubmitData }) => {
           <Modal.Title id="example-modal-sizes-title-lg">Product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <BrandForm
+          <ProductFrom
             data={selectedRow}
             onHide={handleCloseModel}
+            setIsSubmitData={setIsSubmitData}
             allCategoryData={categories}
+            selectedBrand={brand.find((b) => b._id === selectedRow.brandId)} // Pass selected brand
           />
         </Modal.Body>
       </Modal>
