@@ -43,7 +43,7 @@ const ProductTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   const fetchBrands = async () => {
     try {
       const response = await axios.get(
-        "https://shopping-backend-3.onrender.com//brand/getAllBrand"
+        "https://shopping-backend-3.onrender.com/brand/getAllBrand"
       );
       console.log(response.data.data);
       setBrand(response?.data?.data); // Assuming response.data is an array of categories
@@ -121,7 +121,7 @@ const ProductTable = ({ columns, data, pageSize, setIsSubmitData }) => {
                 </td>
                 <td>
                   {brand.find((brand) => brand._id === row.brandId)
-                    ? brand.find((category) => category._id === row.brandId)
+                    ? brand.find((brand) => brand._id === row.brandId)
                         .brand_name
                     : row.brandId}
                 </td>
