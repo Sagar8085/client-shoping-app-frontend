@@ -6,16 +6,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FileInput, TextInput } from "../input/Input";
 import Button from "../button/Button";
+import axios from "axios";
 
-export default function Category({ data }) {
+export default function Category({ data, isEdit, onHide, setIsSubmitData }) {
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState({
-    bytes: "",
-    filename: "",
+    fileName: data && data.file ? data.file.fileName : "",
+    fileUrl: data && data.file ? data.file.fileUrl : "",
   });
 
   const initialValues = {
-    categoryName: data ? data.Name : "",
+    categoryName: data ? data.category_name : "",
   };
 
   const validationSchema = Yup.object({
@@ -23,8 +24,24 @@ export default function Category({ data }) {
   });
 
   const onSubmit = (values) => {
-    console.log("Form values:", values, "-------------", selectedImage);
-    // Add your form submission logic here
+    const categoryData = {
+      id: data._id, // Assuming you have an id field in your row data
+      category_name: values.categoryName,
+      file: selectedImage,
+    };
+    if (
+      categoryData &&
+      selectedImage.fileName.length > 0 &&
+      selectedImage.fileUrl.length > 0
+    ) {
+      if (isEdit) {
+        updateCategory(categoryData);
+      } else {
+        addCategory(categoryData);
+      }
+    } else {
+      alert("All fields are required!");
+    }
   };
 
   const formik = useFormik({
@@ -41,13 +58,60 @@ export default function Category({ data }) {
     }
   };
 
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedImage({
-        bytes: file,
-        filename: URL.createObjectURL(file),
-      });
+  const handleFileInputChange = async (e) => {
+    if (e && e.target && e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("docFile", file);
+
+      try {
+        const uploadImage = await axios.post(
+          "http://localhost:5000/service/uploadSingleDoc",
+          formData
+        );
+        if (uploadImage?.status == 200 || uploadImage?.status == 201) {
+          setSelectedImage({
+            fileName: uploadImage?.data?.fileName,
+            fileUrl: uploadImage?.data?.fileLocation,
+          });
+          console.log("upload image", uploadImage);
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    } else {
+      console.log("No file selected");
+    }
+  };
+
+  const addCategory = async (data) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/category/addCategory`,
+        data
+      );
+      if (response.status == 200) {
+        onHide();
+        setIsSubmitData((prev) => !prev);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateCategory = async (data) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/category/updateCategory/${data.id}`,
+        data
+      );
+
+      if (response.status === 200) {
+        onHide();
+        setIsSubmitData((prev) => !prev);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -92,10 +156,10 @@ export default function Category({ data }) {
                       </Button>
                     </div>
                   </div>
-                  {selectedImage.filename && (
+                  {selectedImage && (
                     <div className="col-auto">
                       <img
-                        src={selectedImage.filename}
+                        src={selectedImage.fileUrl}
                         className="rounded"
                         alt="Selected"
                         style={{ width: "150px", height: "150px" }}
@@ -105,10 +169,15 @@ export default function Category({ data }) {
                 </div>
                 <div className="mt-3 submitButton">
                   <Button type="submit" className="btn btn-primary">
-                    Submit
+                    {isEdit ? "Edit" : "Submit"}
                   </Button>
-                  <Button type="button" className="btn btn-primary">
-                    Reset
+
+                  <Button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={onHide}
+                  >
+                    Cancel
                   </Button>
                 </div>
               </form>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -8,39 +8,79 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Table.scss";
 import Modal from "react-bootstrap/Modal";
-import Category from "../Category/CategoryForm";
 import Button from "react-bootstrap/Button";
+import axios from "axios";
+import BrandForm from "../BrandFrom";
 
-const Table = ({ columns, data, pageSize }) => {
+const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [categories, setCategories] = useState([]);
   const totalPages = Math.ceil(data.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, data.length);
   const currentData = data.slice(startIndex, endIndex);
   const [lgShow, setLgShow] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
+
+  useEffect(() => {
+    // Fetch categories when component mounts
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/category/getAllCategory"
+      );
+      setCategories(response?.data?.data); // Assuming response.data is an array of categories
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
   const handleOpenModel = (row) => {
     if (row) {
+      setIsEdit(true);
       setSelectedRow(row);
       setLgShow(true);
     } else {
       setLgShow(true);
     }
   };
-  const modelHide = () => {
+
+  const handleCloseModel = () => {
     setSelectedRow({});
+    setIsEdit(false);
     setLgShow(false);
+    setIsSubmitData((prev) => !prev);
+  };
+
+  // delete brand from Id
+
+  const deleteBrand = async (brandId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/brand/deleteBrand/${brandId}`
+      );
+      if (response.status == 200) {
+        console.log("Brand deleted successfully");
+        setIsSubmitData((prev) => !prev); // Reload brand data
+      }
+    } catch (error) {
+      console.error("Error deleting brand", error);
+    }
   };
 
   return (
     <div className="table-container p-5 bg-white">
       <div className="addCategoryButton">
         <Button variant="outline-primary" onClick={() => handleOpenModel()}>
-          Add Category
+          Add Brand
         </Button>
       </div>
       <div className="centered-table">
@@ -50,19 +90,25 @@ const Table = ({ columns, data, pageSize }) => {
               {columns.map((column) => (
                 <th key={column}>{column}</th>
               ))}
-              <th>Actions</th> {/* Add a column for action icons */}
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentData.map((row, index) => (
               <tr key={index}>
-                {/* {columns.map((column) => (
-                  <td key={column}>{row[column]}</td>
-                ))} */}
-                <td>{index}</td>
-                <td>{row?.Name}</td>
+                <td>{index + 1}</td>
                 <td>
-                  <img src={row?.image} />
+                  {categories.find(
+                    (category) => category._id === row.category_id
+                  )
+                    ? categories.find(
+                        (category) => category._id === row.category_id
+                      ).category_name
+                    : row.category_id}
+                </td>
+                <td>{row?.brand_name}</td>
+                <td>
+                  <img src={row?.file?.fileUrl} alt="brand image" />
                 </td>
                 <td>
                   <button className="btn ">
@@ -72,11 +118,9 @@ const Table = ({ columns, data, pageSize }) => {
                       icon={faPen}
                     />
                   </button>{" "}
-                  {/* Edit icon */}
-                  <button className="btn">
+                  <button className="btn" onClick={() => deleteBrand(row._id)}>
                     <FontAwesomeIcon className="deleteIcon" icon={faTrashAlt} />
                   </button>{" "}
-                  {/* Delete icon */}
                 </td>
               </tr>
             ))}
@@ -106,20 +150,22 @@ const Table = ({ columns, data, pageSize }) => {
       <Modal
         size="lg"
         show={lgShow}
-        onHide={() => modelHide()}
+        onHide={handleCloseModel}
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">
-            Large Modal
-          </Modal.Title>
+          <Modal.Title id="example-modal-sizes-title-lg">Brand</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Category data={selectedRow} />
+          <BrandForm
+            data={selectedRow}
+            onHide={handleCloseModel}
+            allCategoryData={categories}
+          />
         </Modal.Body>
       </Modal>
     </div>
   );
 };
 
-export default Table;
+export default BrandTable;

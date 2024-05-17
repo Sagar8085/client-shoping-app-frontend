@@ -1,0 +1,106 @@
+.table-container {
+  overflow-x: auto; // Enable horizontal scrolling if content overflows
+  max-width: 100%; // Ensure the container does not exceed its parent width
+
+  .centered-table {
+    width: 100%; // Make the table take full width of its container
+    margin: 0 auto; // Center the table horizontally
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+    table {
+      width: 100%; // Full width table
+      border-collapse: collapse; // Collapse borders for cleaner look
+      font-family: Arial, sans-serif; // Set a default font family
+      font-size: 14px; // Default font size
+
+      thead {
+        background-color: #f8f9fa; // Light grey background for header row
+        color: #343a40; // Darker text for headers
+        th,
+        td {
+          padding: 10px; /* Adjust the padding */
+          text-align: left; /* Align text to the left */
+        }
+      }
+      .btn {
+        margin: 0; /* Remove margin from the buttons */
+      }
+      tbody {
+        tr {
+          &:nth-child(even) {
+            background-color: #f8f9fa; // Alternate row colors for better readability
+          }
+
+          td {
+            padding: 10px; // Padding around text in cells
+            border-bottom: 1px solid #dee2e6; // Light border between rows
+            text-align: left; // Align text to the left
+          }
+        }
+        img {
+          width: 100px;
+          aspect-ratio: 1 / 1;
+          object-fit: contain;
+          //   mix-blend-mode: color-burn;
+        }
+      }
+
+      tfoot {
+        background-color: #f8f9fa; // Light grey background for footer row
+        color: #343a40; // Darker text for footers
+      }
+    }
+  }
+}
+
+.pagination-container {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+
+  .btn {
+    margin: 0;
+  }
+
+  .page-numbers {
+    flex-grow: 1;
+    text-align: center;
+  }
+}
+.deleteIcon {
+  color: red;
+  transition: color 0.3s; /* Smooth transition effect */
+}
+
+.editIcon {
+  color: rgb(36, 94, 180);
+  transition: color 0.3s; /* Smooth transition effect */
+}
+
+/* Hover effect */
+.deleteIcon:hover {
+  color: darkred;
+}
+
+.editIcon:hover {
+  color: navy;
+}
+.addCategoryButton {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin: 6px 0px;
+}
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto; // Enable horizontal scrolling on smaller screens
+
+    .centered-table {
+      width: 100%; // Full width table on smaller screens
+
+      table {
+        font-size: 12px; // Smaller font size on smaller screens
+      }
+    }
+  }
+}
