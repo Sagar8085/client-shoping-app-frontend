@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import BrandTable from "./Table/BrandTable";
 import axios from "axios";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 export default function BrandPage() {
   const [allBrandData, setAllBrandData] = useState([]);
   const [isSubmitData, setIsSubmitData] = useState(false);

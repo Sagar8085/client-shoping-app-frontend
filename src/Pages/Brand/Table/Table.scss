@@ -73,7 +73,7 @@
 }
 
 .editIcon {
-  color: rgb(36, 94, 180);
+  color: #fff;
   transition: color 0.3s; /* Smooth transition effect */
 }
 
@@ -158,13 +158,13 @@
   color: white;
 }
 
-.editButton {
-  background-color: #1b88c6;
+.editIcon {
+  background-color: #007bff;
   border-radius: 50%;
   padding: 5px;
 }
 
-.deleteButton {
+.deleteIcon {
   background-color: #dc3545;
   border-radius: 50%;
   padding: 5px;

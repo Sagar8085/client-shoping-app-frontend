@@ -118,9 +118,14 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
                       icon={faPen}
                     />
                   </button>{" "}
-                  <button className="btn deleteButton" onClick={() => deleteBrand(row._id)}>
+                  
+                  <button
+                    className="btn deleteButton"
+                    onClick={() => deleteBrand(row._id)}
+                  >
                     <FontAwesomeIcon className="deleteIcon" icon={faTrashAlt} />
                   </button>{" "}
+                
                 </td>
               </tr>
             ))}
