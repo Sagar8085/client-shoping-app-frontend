@@ -10,11 +10,12 @@ import "./Table.scss";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-import BrandForm from "../BrandFrom";
+import BrandForm from "../ProductFrom";
 
-const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
+const ProductTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [categories, setCategories] = useState([]);
+  const [brand, setBrand] = useState([]);
   const totalPages = Math.ceil(data.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, data.length);
@@ -24,8 +25,8 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   const [selectedRow, setSelectedRow] = useState({});
 
   useEffect(() => {
-    // Fetch categories when component mounts
     fetchCategories();
+    fetchBrands();
   }, []);
 
   const fetchCategories = async () => {
@@ -34,6 +35,18 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
         "https://shopping-backend-3.onrender.com/category/getAllCategory"
       );
       setCategories(response?.data?.data); // Assuming response.data is an array of categories
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchBrands = async () => {
+    try {
+      const response = await axios.get(
+        "https://shopping-backend-3.onrender.com//brand/getAllBrand"
+      );
+      console.log(response.data.data);
+      setBrand(response?.data?.data); // Assuming response.data is an array of categories
     } catch (error) {
       console.log(error);
     }
@@ -60,12 +73,12 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
     setIsSubmitData((prev) => !prev);
   };
 
-  // delete brand from Id
+  // delete product from Id
 
-  const deleteBrand = async (brandId) => {
+  const deleteProduct = async (brandId) => {
     try {
       const response = await axios.delete(
-        `https://shopping-backend-3.onrender.com/brand/deleteBrand/${brandId}`
+        `https://shopping-backend-3.onrender.com/product/deleteProduct/${brandId}`
       );
       if (response.status == 200) {
         console.log("Brand deleted successfully");
@@ -80,7 +93,7 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
     <div className="table-container p-5 bg-white">
       <div className="addCategoryButton">
         <Button variant="outline-primary" onClick={() => handleOpenModel()}>
-          Add Brand
+          Add Product
         </Button>
       </div>
       <div className="centered-table">
@@ -99,14 +112,20 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
                 <td>{index + 1}</td>
                 <td>
                   {categories.find(
-                    (category) => category._id === row.category_id
+                    (category) => category._id === row.categoryId
                   )
                     ? categories.find(
-                        (category) => category._id === row.category_id
+                        (category) => category._id === row.categoryId
                       ).category_name
-                    : row.category_id}
+                    : row.categoryId}
                 </td>
-                <td>{row?.brand_name}</td>
+                <td>
+                  {brand.find((brand) => brand._id === row.brandId)
+                    ? brand.find((category) => category._id === row.brandId)
+                        .brand_name
+                    : row.brandId}
+                </td>
+                <td>{row.productName}</td>
                 <td>
                   <img src={row?.file?.fileUrl} alt="brand image" />
                 </td>
@@ -118,7 +137,10 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
                       icon={faPen}
                     />
                   </button>{" "}
-                  <button className="btn deleteButton" onClick={() => deleteBrand(row._id)}>
+                  <button
+                    className="btn deleteButton"
+                    onClick={() => deleteProduct(row._id)}
+                  >
                     <FontAwesomeIcon className="deleteIcon" icon={faTrashAlt} />
                   </button>{" "}
                 </td>
@@ -154,7 +176,7 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">Brand</Modal.Title>
+          <Modal.Title id="example-modal-sizes-title-lg">Product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <BrandForm
@@ -168,4 +190,4 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   );
 };
 
-export default BrandTable;
+export default ProductTable;
