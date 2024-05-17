@@ -84,7 +84,7 @@ export default function BrandForm({
 
       try {
         const uploadImage = await axios.post(
-          "http://localhost:5000/service/uploadSingleDoc",
+          "https://shopping-backend-3.onrender.com/service/uploadSingleDoc",
           formData
         );
         if (uploadImage?.status == 200 || uploadImage?.status == 201) {
@@ -104,7 +104,7 @@ export default function BrandForm({
   const addBrand = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/brand/addBrand",
+        "https://shopping-backend-3.onrender.com/brand/addBrand",
         data
       );
       if (response?.status) {
@@ -120,7 +120,7 @@ export default function BrandForm({
   const updateBrand = async (brandId, data) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/brand/updateBrand/${brandId}`,
+        `https://shopping-backend-3.onrender.com/brand/updateBrand/${brandId}`,
         data
       );
       if (response?.status) {
@@ -217,7 +217,8 @@ export default function BrandForm({
                 </div>
                 <div className="mt-3 submitButton">
                   <Button type="submit" className="btn btn-primary">
-                    {isEditing ? "Update" : "Submit"} {/* Dynamic button text */}
+                    {isEditing ? "Update" : "Submit"}{" "}
+                    {/* Dynamic button text */}
                   </Button>
                   <Button
                     type="button"

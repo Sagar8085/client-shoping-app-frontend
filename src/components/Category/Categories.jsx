@@ -14,7 +14,7 @@ export default function Categories() {
   const allCategory = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/category/getAllCategory`
+        `https://shopping-backend-3.onrender.com/category/getAllCategory`
       );
 
       if (response.status == 200) {

@@ -31,7 +31,7 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/category/getAllCategory"
+        "https://shopping-backend-3.onrender.com/category/getAllCategory"
       );
       setCategories(response?.data?.data); // Assuming response.data is an array of categories
     } catch (error) {
@@ -65,7 +65,7 @@ const BrandTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   const deleteBrand = async (brandId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/brand/deleteBrand/${brandId}`
+        `https://shopping-backend-3.onrender.com/brand/deleteBrand/${brandId}`
       );
       if (response.status == 200) {
         console.log("Brand deleted successfully");

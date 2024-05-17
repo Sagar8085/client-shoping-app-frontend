@@ -66,7 +66,7 @@ export default function Category({ data, isEdit, onHide, setIsSubmitData }) {
 
       try {
         const uploadImage = await axios.post(
-          "http://localhost:5000/service/uploadSingleDoc",
+          "https://shopping-backend-3.onrender.com/service/uploadSingleDoc",
           formData
         );
         if (uploadImage?.status == 200 || uploadImage?.status == 201) {
@@ -87,7 +87,7 @@ export default function Category({ data, isEdit, onHide, setIsSubmitData }) {
   const addCategory = async (data) => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/category/addCategory`,
+        `https://shopping-backend-3.onrender.com/category/addCategory`,
         data
       );
       if (response.status == 200) {
@@ -102,7 +102,7 @@ export default function Category({ data, isEdit, onHide, setIsSubmitData }) {
   const updateCategory = async (data) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/category/updateCategory/${data.id}`,
+        `https://shopping-backend-3.onrender.com/category/updateCategory/${data.id}`,
         data
       );
 

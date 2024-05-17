@@ -12,7 +12,7 @@ export default function BrandPage() {
   const getAllBrand = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/brand/getAllBrand"
+        "https://shopping-backend-3.onrender.com/brand/getAllBrand"
       );
 
       setAllBrandData(response?.data?.data);

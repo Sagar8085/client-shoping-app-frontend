@@ -45,7 +45,7 @@ const Table = ({ columns, data, pageSize, setIsSubmitData }) => {
   const deleteCategory = async (categoryId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/category/deleteCategory/${categoryId}`
+        `https://shopping-backend-3.onrender.com/category/deleteCategory/${categoryId}`
       );
       if (response.status === 200) {
         console.log(response);
@@ -134,9 +134,7 @@ const Table = ({ columns, data, pageSize, setIsSubmitData }) => {
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">
-            Category
-          </Modal.Title>
+          <Modal.Title id="example-modal-sizes-title-lg">Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Category data={selectedRow} isEdit={isEdit} onHide={modelHide} />
