@@ -40,3 +40,19 @@ export function FileInput({ id, onChange, className, forwardedRef }) {
       </div>
     );
   }
+
+  export function FileMultipleInput({ id, onChange, className, forwardedRef }) {
+    return (
+      <div className="mb-3">
+        <input
+          type="file"
+          className={`${className} form-control`}
+          id={id}
+          aria-describedby={`${id}Help`}
+          onChange={onChange}
+          ref={forwardedRef}
+          multiple // Add the multiple attribute to enable multi-file selection
+        />
+      </div>
+    );
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeft,
@@ -8,20 +8,50 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Table.scss";
 import Modal from "react-bootstrap/Modal";
-import Category from "../CategoryForm";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import ProductFrom from "../ProductDetailFrom";
 
-const Table = ({ columns, data, pageSize, setIsSubmitData }) => {
+const ProductDetailTable = ({ columns, data, pageSize, setIsSubmitData }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [categories, setCategories] = useState([]);
+  const [brand, setBrand] = useState([]);
   const totalPages = Math.ceil(data.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, data.length);
   const currentData = data.slice(startIndex, endIndex);
   const [lgShow, setLgShow] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-
   const [selectedRow, setSelectedRow] = useState({});
+
+  useEffect(() => {
+    fetchCategories();
+    fetchBrands();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(
+        "https://shopping-backend-3.onrender.com/category/getAllCategory"
+      );
+      setCategories(response?.data?.data); // Assuming response.data is an array of categories
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchBrands = async () => {
+    try {
+      const response = await axios.get(
+        "https://shopping-backend-3.onrender.com/brand/getAllBrand"
+      );
+
+      setBrand(response?.data?.data); // Assuming response.data is an array of categories
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -35,25 +65,27 @@ const Table = ({ columns, data, pageSize, setIsSubmitData }) => {
       setLgShow(true);
     }
   };
-  const modelHide = () => {
+
+  const handleCloseModel = () => {
     setSelectedRow({});
     setIsEdit(false);
     setLgShow(false);
     setIsSubmitData((prev) => !prev);
   };
 
-  const deleteCategory = async (categoryId) => {
+  // delete product from Id
+
+  const deleteProduct = async (brandId) => {
     try {
       const response = await axios.delete(
-        `https://shopping-backend-3.onrender.com/category/deleteCategory/${categoryId}`
+        `https://shopping-backend-3.onrender.com/product/deleteProduct/${brandId}`
       );
-      if (response.status === 200) {
-        console.log(response);
-        alert("Category deleted successfully!");
-        setIsSubmitData((prev) => !prev); // Toggle the state to trigger reload
+      if (response.status == 200) {
+        console.log("Brand deleted successfully");
+        setIsSubmitData((prev) => !prev); // Reload brand data
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error deleting brand", error);
     }
   };
 
@@ -61,7 +93,7 @@ const Table = ({ columns, data, pageSize, setIsSubmitData }) => {
     <div className="table-container p-5 bg-white">
       <div className="addCategoryButton">
         <Button variant="outline-primary" onClick={() => handleOpenModel()}>
-          Add Category
+          Add Product Details
         </Button>
       </div>
       <div className="centered-table">
@@ -71,36 +103,45 @@ const Table = ({ columns, data, pageSize, setIsSubmitData }) => {
               {columns.map((column) => (
                 <th key={column}>{column}</th>
               ))}
-              <th>Actions</th> {/* Add a column for action icons */}
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentData.map((row, index) => (
               <tr key={index}>
-                {/* {columns.map((column) => (
-                  <td key={column}>{row[column]}</td>
-                ))} */}
                 <td>{index + 1}</td>
-                <td>{row?.category_name}</td>
                 <td>
-                  <img src={row?.file?.fileUrl} />
+                  {categories.find(
+                    (category) => category._id === row.categoryId
+                  )
+                    ? categories.find(
+                        (category) => category._id === row.categoryId
+                      ).category_name
+                    : row.categoryId}
                 </td>
                 <td>
-                  <button className="btn editButton">
-                    <FontAwesomeIcon
-                      className="editIcon"
-                      onClick={() => handleOpenModel(row)}
-                      icon={faPen}
-                    />
+                  {brand.find((brand) => brand._id === row.brandId)
+                    ? brand.find((brand) => brand._id === row.brandId)
+                        .brand_name
+                    : row.brandId}
+                </td>
+                <td>{row.productName}</td>
+                <td>
+                  <img src={row?.file?.fileUrl} alt="brand image" />
+                </td>
+                <td>
+                  <button
+                    className="btn editButton "
+                    onClick={() => handleOpenModel(row)}
+                  >
+                    <FontAwesomeIcon className="editIcon" icon={faPen} />
                   </button>{" "}
-                  {/* Edit icon */}
                   <button
                     className="btn deleteButton"
-                    onClick={() => deleteCategory(row._id)}
+                    onClick={() => deleteProduct(row._id)}
                   >
                     <FontAwesomeIcon className="deleteIcon" icon={faTrashAlt} />
                   </button>{" "}
-                  {/* Delete icon */}
                 </td>
               </tr>
             ))}
@@ -130,18 +171,24 @@ const Table = ({ columns, data, pageSize, setIsSubmitData }) => {
       <Modal
         size="lg"
         show={lgShow}
-        onHide={modelHide}
+        onHide={handleCloseModel}
         aria-labelledby="example-modal-sizes-title-lg"
       >
         <Modal.Header closeButton>
-          <Modal.Title id="example-modal-sizes-title-lg">Category</Modal.Title>
+          <Modal.Title id="example-modal-sizes-title-lg">Product</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Category data={selectedRow} isEdit={isEdit} onHide={modelHide} />
+          <ProductFrom
+            data={selectedRow}
+            onHide={handleCloseModel}
+            setIsSubmitData={setIsSubmitData}
+            allCategoryData={categories}
+            selectedBrand={brand.find((b) => b._id === selectedRow.brandId)} // Pass selected brand
+          />
         </Modal.Body>
       </Modal>
     </div>
   );
 };
 
-export default Table;
+export default ProductDetailTable;
